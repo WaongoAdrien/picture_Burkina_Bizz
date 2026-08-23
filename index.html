@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex">
+<title>Studio 101 · Asset Index</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@125,600;125,800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink: #0d0c0a;          /* near-black background, per Studio 101 logo */
+    --panel: #16140f;
+    --panel-2: #1d1a13;
+    --gold: #d4a437;         /* Studio 101 gold */
+    --gold-soft: #b8912f;
+    --text: #ece6d8;
+    --muted: #9a917c;
+    --line: #2a261c;
+    --radius: 10px;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { background: var(--ink); }
+  body {
+    font-family: 'Inter', system-ui, sans-serif;
+    color: var(--text);
+    min-height: 100vh;
+    padding: 0 clamp(16px, 4vw, 48px) 64px;
+  }
+
+  /* ── Header ─────────────────────────────── */
+  header {
+    padding: 40px 0 24px;
+    border-bottom: 1px solid var(--line);
+    margin-bottom: 8px;
+  }
+  .eyebrow {
+    font-family: 'Archivo', sans-serif;
+    font-weight: 600;
+    font-size: 11px;
+    letter-spacing: 0.28em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 10px;
+  }
+  h1 {
+    font-family: 'Archivo', sans-serif;
+    font-weight: 800;
+    font-size: clamp(26px, 4vw, 40px);
+    letter-spacing: 0.01em;
+    line-height: 1.1;
+  }
+  h1 .thin { color: var(--muted); font-weight: 600; }
+
+  /* signature: dot-dash rule echoing the logo's base decoration */
+  .dotdash {
+    display: flex; align-items: center; gap: 7px;
+    margin-top: 18px;
+  }
+  .dotdash i {
+    display: block; height: 3px; border-radius: 2px;
+    background: var(--gold);
+  }
+  .dotdash i:nth-child(odd)  { width: 3px; opacity: .9; }
+  .dotdash i:nth-child(even) { width: 26px; opacity: .55; }
+
+  /* ── Toolbar ────────────────────────────── */
+  .toolbar {
+    display: flex; flex-wrap: wrap; align-items: center; gap: 12px;
+    padding: 18px 0;
+  }
+  .search {
+    flex: 1 1 260px;
+    background: var(--panel);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    color: var(--text);
+    font: 500 14px 'Inter', sans-serif;
+    padding: 11px 14px;
+    outline: none;
+  }
+  .search:focus { border-color: var(--gold-soft); }
+  .search::placeholder { color: var(--muted); }
+  .count { font-size: 13px; color: var(--muted); white-space: nowrap; }
+
+  /* ── Grid ───────────────────────────────── */
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(210px, 1fr));
+    gap: 16px;
+  }
+  .card {
+    background: var(--panel);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    overflow: hidden;
+    display: flex; flex-direction: column;
+    transition: border-color .15s ease, transform .15s ease;
+  }
+  .card:hover { border-color: var(--gold-soft); transform: translateY(-2px); }
+  @media (prefers-reduced-motion: reduce) { .card, .card:hover { transition: none; transform: none; } }
+
+  .thumb {
+    aspect-ratio: 4 / 3;
+    display: flex; align-items: center; justify-content: center;
+    cursor: zoom-in;
+    /* checkerboard so transparent PNGs read clearly */
+    background:
+      repeating-conic-gradient(#211d15 0% 25%, #191610 0% 50%) 0 0 / 22px 22px;
+  }
+  .thumb img { max-width: 100%; max-height: 100%; object-fit: contain; display: block; }
+  .thumb.broken { cursor: default; }
+  .thumb .missing { font-size: 12px; color: var(--muted); padding: 8px; text-align: center; }
+
+  .meta { padding: 12px 12px 12px; border-top: 1px solid var(--line); }
+  .fname {
+    font-size: 13px; font-weight: 600;
+    word-break: break-all; margin-bottom: 2px;
+  }
+  .dims { font-size: 11.5px; color: var(--muted); margin-bottom: 10px; min-height: 14px; }
+  .actions { display: flex; gap: 8px; }
+  .btn {
+    flex: 1;
+    font: 600 12px 'Inter', sans-serif;
+    padding: 8px 10px;
+    border-radius: 7px;
+    border: 1px solid var(--line);
+    background: var(--panel-2);
+    color: var(--text);
+    cursor: pointer;
+    text-align: center;
+    text-decoration: none;
+    transition: background .12s ease, color .12s ease, border-color .12s ease;
+  }
+  .btn:hover { border-color: var(--gold-soft); }
+  .btn:focus-visible, .search:focus-visible { outline: 2px solid var(--gold); outline-offset: 2px; }
+  .btn.primary { background: var(--gold); border-color: var(--gold); color: #14110a; }
+  .btn.primary:hover { background: #e0b34a; }
+  .btn.copied { background: #2e5c33; border-color: #2e5c33; color: #dff3e0; }
+
+  .empty {
+    grid-column: 1 / -1;
+    text-align: center;
+    color: var(--muted);
+    font-size: 14px;
+    padding: 60px 20px;
+    border: 1px dashed var(--line);
+    border-radius: var(--radius);
+  }
+
+  /* ── Lightbox ───────────────────────────── */
+  dialog.lightbox {
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    background: var(--panel);
+    padding: 0;
+    max-width: min(92vw, 1100px);
+  }
+  dialog.lightbox::backdrop { background: rgba(0,0,0,.75); }
+  dialog.lightbox img { display: block; max-width: 100%; max-height: 82vh; }
+  dialog.lightbox .bar {
+    display: flex; justify-content: space-between; align-items: center;
+    gap: 12px; padding: 10px 14px; border-top: 1px solid var(--line);
+    font-size: 13px; color: var(--muted); word-break: break-all;
+  }
+  dialog.lightbox button { flex-shrink: 0; }
+
+  /* ── Footer note ────────────────────────── */
+  footer {
+    margin-top: 40px; padding-top: 20px;
+    border-top: 1px solid var(--line);
+    font-size: 12.5px; color: var(--muted); line-height: 1.7;
+  }
+  footer code {
+    background: var(--panel-2); border: 1px solid var(--line);
+    border-radius: 4px; padding: 1px 6px; font-size: 12px; color: var(--gold);
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="eyebrow">Studio 101</div>
+  <h1>Asset Index <span class="thin">/ images</span></h1>
+  <div class="dotdash" aria-hidden="true">
+    <i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i>
+  </div>
+</header>
+
+<div class="toolbar">
+  <input class="search" id="search" type="search" placeholder="Filter by filename…" aria-label="Filter images by filename">
+  <span class="count" id="count"></span>
+</div>
+
+<div class="grid" id="grid"></div>
+
+<footer>
+  <strong style="color:var(--text)">Adding images:</strong> drop the file into the <code>img/</code> folder,
+  then add its filename to the <code>FILES</code> list at the top of this page's script. Redeploy and it appears here.
+  “Copy URL” always gives the full address for whatever domain this page is served from.
+</footer>
+
+<dialog class="lightbox" id="lightbox">
+  <img id="lightboxImg" alt="">
+  <div class="bar">
+    <span id="lightboxName"></span>
+    <button class="btn" id="lightboxClose">Close</button>
+  </div>
+</dialog>
+
+<script>
+/* ═══════════════════════════════════════════════════════════
+   EDIT THIS LIST when you add or remove images.
+   Files live in the img/ folder next to this index.html.
+   ═══════════════════════════════════════════════════════════ */
+const FILES = [
+  "cite-poterie.jpeg",
+  "festitval_grillade_3.webp",
+  "festival_grillade_1.jpg",
+  "festival_grillade_2.jpg",
+  "festival_grillade_4.jpg",
+  "festival_grillade_5.webp",
+  "FIRHO_1.jpeg",
+  "FIRHO_2.jpeg",
+  "FIRHO_3.jpg",
+  "FITMO_1.webp",
+  "FITMO_2.jpg",
+  "FITMO_4.png",
+  "FITMO_5.jpeg",
+  "FRIHO_4.jpeg",
+  "grand_nuit_2.jpg",
+  "grande_mosquee.jpeg",
+  "grande_mosquee_2.jpg",
+  "grande_nuit_4.jpg",
+  "grandes_nuit_3.jpg",
+  "nuit_contes_1.jpeg",
+  "poterie-citee.jpeg",
+  "poterie-citee1.jpg",
+  "R_FASO.jpg",
+  "recreatale3.jpeg",
+  "recreatale_1.jpg",
+  "recreatale_2.webp",
+  "recreatale_4.webp",
+  "SIAL_1.png",
+  "SIAL_2.webp",
+  "SIAO_1.jpg",
+  "SIAO_2.png",
+  "SIAO_3.avif",
+  "SIAO_5.avif",
+  "SIAO_7.jpeg",
+  "SITHO_1.avif",
+  "SITHO_2.jpg",
+  "SITHO_3.avif",
+  "SITHO_4.jpg",
+  "SITHO_5.avif",
+  "tiktokaward26.jpeg",
+  "tiktokaward26_2.jpeg",
+  "tiktokAwards.jpeg",
+  "TOUR_FASO_1.jpg",
+  "TOUR_FASO_2.jpg",
+  "TOUR_FASO_3.webp",
+  "TOUR_FASO_5.jpeg",
+  "TOUR_FASO_7.jpg",
+];
+
+const IMG_DIR = "img/";   // change if your folder is named differently
+
+/* ─────────────────────────────────────────────────────────── */
+const grid = document.getElementById("grid");
+const search = document.getElementById("search");
+const count = document.getElementById("count");
+const lightbox = document.getElementById("lightbox");
+const lightboxImg = document.getElementById("lightboxImg");
+const lightboxName = document.getElementById("lightboxName");
+
+function fullUrl(name) {
+  return new URL(IMG_DIR + name, window.location.href).href;
+}
+
+function makeCard(name) {
+  const url = fullUrl(name);
+  const card = document.createElement("div");
+  card.className = "card";
+  card.dataset.name = name.toLowerCase();
+
+  const thumb = document.createElement("div");
+  thumb.className = "thumb";
+  const img = document.createElement("img");
+  img.loading = "lazy";
+  img.src = url;
+  img.alt = name;
+  thumb.appendChild(img);
+
+  const meta = document.createElement("div");
+  meta.className = "meta";
+  const fname = document.createElement("div");
+  fname.className = "fname";
+  fname.textContent = name;
+  const dims = document.createElement("div");
+  dims.className = "dims";
+  dims.textContent = "…";
+
+  const actions = document.createElement("div");
+  actions.className = "actions";
+  const copyBtn = document.createElement("button");
+  copyBtn.className = "btn primary";
+  copyBtn.textContent = "Copy URL";
+  const openLink = document.createElement("a");
+  openLink.className = "btn";
+  openLink.textContent = "Open";
+  openLink.href = url;
+  openLink.target = "_blank";
+  openLink.rel = "noopener";
+
+  img.addEventListener("load", () => {
+    dims.textContent = img.naturalWidth + " × " + img.naturalHeight + " px";
+  });
+  img.addEventListener("error", () => {
+    thumb.classList.add("broken");
+    thumb.innerHTML = '<div class="missing">File not found —<br>check the name & the img/ folder</div>';
+    dims.textContent = "missing";
+  });
+
+  thumb.addEventListener("click", () => {
+    if (thumb.classList.contains("broken")) return;
+    lightboxImg.src = url;
+    lightboxImg.alt = name;
+    lightboxName.textContent = url;
+    lightbox.showModal();
+  });
+
+  copyBtn.addEventListener("click", async () => {
+    try {
+      await navigator.clipboard.writeText(url);
+    } catch {
+      const ta = document.createElement("textarea");
+      ta.value = url; document.body.appendChild(ta);
+      ta.select(); document.execCommand("copy"); ta.remove();
+    }
+    copyBtn.textContent = "Copied ✓";
+    copyBtn.classList.add("copied");
+    setTimeout(() => {
+      copyBtn.textContent = "Copy URL";
+      copyBtn.classList.remove("copied");
+    }, 1400);
+  });
+
+  actions.append(copyBtn, openLink);
+  meta.append(fname, dims, actions);
+  card.append(thumb, meta);
+  return card;
+}
+
+function render() {
+  grid.innerHTML = "";
+  const q = search.value.trim().toLowerCase();
+  const shown = FILES.filter(f => f.toLowerCase().includes(q));
+  shown.forEach(f => grid.appendChild(makeCard(f)));
+  if (shown.length === 0) {
+    const empty = document.createElement("div");
+    empty.className = "empty";
+    empty.textContent = q
+      ? "No files match “" + search.value + "”."
+      : "No images yet. Add filenames to the FILES list in this page's script.";
+    grid.appendChild(empty);
+  }
+  count.textContent = shown.length + " of " + FILES.length + " file" + (FILES.length === 1 ? "" : "s");
+}
+
+search.addEventListener("input", render);
+document.getElementById("lightboxClose").addEventListener("click", () => lightbox.close());
+lightbox.addEventListener("click", e => { if (e.target === lightbox) lightbox.close(); });
+
+render();
+</script>
+</body>
+</html>
